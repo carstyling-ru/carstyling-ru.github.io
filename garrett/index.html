@@ -7,12 +7,21 @@
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#24302f;background:#f4f3ee}*{box-sizing:border-box}body{margin:0}header{padding:18px 24px 14px;background:#182d30;color:#fff}h1{font-size:25px;line-height:1.2;margin:0 0 5px}header p{margin:0;color:#d2dfdd;font-size:14px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;height:calc(100vh - 104px);min-height:620px}#map{height:100%;background:#cce0dd}aside{background:#f7f5ef;border-left:1px solid #c8c9bb;overflow:auto;padding:17px 19px}.controls{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin:0 0 16px;font-size:14px}button{font:inherit;border:1px solid #aab6b1;background:#fff;color:#24302f;padding:7px 10px;border-radius:6px;cursor:pointer}button:hover{background:#e5eeea}label{display:flex;gap:8px;align-items:center}input[type="range"]{width:105px;accent-color:#965442}h2{font-size:16px;margin:18px 0 8px}h3{font-size:14px;margin:0 0 5px}p{line-height:1.45}.help{font-size:13px;color:#52605c;margin:0 0 12px}.item{padding:10px 0;border-top:1px solid #dadbd2}.item button{display:block;text-align:left;width:100%;border:0;border-radius:0;background:transparent;padding:1px 0;color:#743f33;font-weight:650}.item button:hover{text-decoration:underline}.item p{font-size:13px;margin:4px 0}.grade{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#63736e}.source{font-size:12px;color:#586662}.key{display:flex;align-items:center;gap:7px;margin:7px 0;font-size:13px}.swatch{width:21px;height:13px;display:inline-block;border-radius:4px}.strong{background:#9a513f}.medium{background:#ba8a4c}.weak{background:#738a7d}.map-label{background:#fffef5;border:1px solid #957e5b;border-radius:5px;box-shadow:0 1px 5px #0004;color:#26342e;font:600 13px system-ui,sans-serif;padding:4px 7px;white-space:nowrap}.map-label:before{display:none}.leaflet-popup-content{font:13px/1.45 system-ui,sans-serif;max-width:300px}.leaflet-popup-content h3{margin-bottom:6px}.refs{font-size:12px;line-height:1.5}.refs a{color:#6c4a39}dialog{border:0;border-radius:10px;padding:0;background:#f7f5ef;color:#24302f;width:min(760px,94vw);max-height:92vh;box-shadow:0 22px 70px #0009}dialog::backdrop{background:#0b1718b8}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 18px}.dialog-head h2{font-size:20px;margin:0}.dialog-head button{flex:none}.dialog-art{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;background:#dfd9cb}.dialog-body{padding:12px 18px 20px}.dialog-body p{font-size:14px;margin:5px 0}footer{padding:10px 24px;background:#e9e9e1;font-size:12px;color:#4e5a55}@media(max-width:800px){.layout{display:flex;flex-direction:column;height:auto}#map{height:65vh;min-height:430px}aside{overflow:visible;border-left:0;border-top:1px solid #c8c9bb}.controls{gap:8px}header{padding:14px}h1{font-size:21px}}
 </style>
+<style>
+.anchor-icon{background:none;border:0;width:max-content!important;height:auto!important}
+.anchor-icon .anchor-content{display:flex;align-items:center;gap:4px;width:max-content;filter:drop-shadow(0 1px 2px #0005)}
+.anchor-icon .anchor-dot{width:9px;height:9px;flex:none;border:2px solid #fff;border-radius:50%;background:#204c68;box-shadow:0 0 0 1px #204c68}
+.anchor-icon .anchor-pill{padding:2px 5px;border:1px solid #7c9bab;border-radius:4px;background:#f6fbfce8;color:#17384a;font:500 10px/1.2 system-ui,sans-serif;white-space:nowrap}
+.anchor-icon:hover .anchor-pill{background:#fff;border-color:#204c68}
+.anchor-icon.is-crowded,.anchor-icon.is-crowded .anchor-content{width:12px!important}.anchor-icon.is-crowded .anchor-pill{visibility:hidden}.anchor-icon.is-crowded:hover .anchor-pill,.anchor-icon.is-crowded.is-hovered .anchor-pill{visibility:visible;background:#fff}.anchor-icon.is-crowded:hover,.anchor-icon.is-hovered{z-index:9999!important}
+.anchor-popup{min-width:170px}.anchor-popup strong{display:block;font-size:14px}.anchor-popup span{display:block;color:#586662}.anchor-popup a{display:inline-block;margin-top:5px;color:#24506c}
+</style>
 </head>
 <body>
 <header><h1>Танфер на карте Сент-Луиса</h1><p>Вероятностная привязка по рельефу и взаимному расположению · точки показывают предполагаемые зоны, не реальные адреса</p></header>
 <div class="layout"><div id="map" role="application" aria-label="Карта Сент-Луиса с наложением локаций Танфера"></div><aside>
-<div class="controls"><label><input id="overlay-toggle" type="checkbox" checked> Танфер</label><label>Прозрачность <input id="opacity" type="range" min="15" max="100" value="100" aria-label="Прозрачность наложения"></label><button id="reset" type="button">Показать всё</button></div>
-<p class="help">Подложка — современная карта OpenStreetMap. Координаты наложения служат только для сравнения пространственной логики двух городов. Масштаб Танфера автор представлял примерно вдвое меньше Сент-Луиса.</p>
+<div class="controls"><label><input id="overlay-toggle" type="checkbox" checked> Танфер</label><label><input id="anchors-toggle" type="checkbox" checked> Опорные точки</label><label>Прозрачность <input id="opacity" type="range" min="15" max="100" value="100" aria-label="Прозрачность наложения"></label><button id="reset" type="button">Показать всё</button></div>
+<p class="help">Подложка — современная карта OpenStreetMap. Синие опорные точки обозначают реальные места Сент-Луиса; наведите на точку или нажмите её, чтобы увидеть подпись и сведения. При тесном расположении подписи раскрываются при увеличении карты. Координаты Танфера служат только для сравнения пространственной логики двух городов. Масштаб Танфера автор представлял примерно вдвое меньше Сент-Луиса.</p>
 <div class="key"><span class="swatch strong"></span> Сильный структурный аналог</div><div class="key"><span class="swatch medium"></span> Вероятная зона</div><div class="key"><span class="swatch weak"></span> Слабая привязка</div>
 <h2>Наложенные места</h2><div id="places"></div>
 <h2>Вне географической привязки</h2><p class="help">Reservoir Hill, North Hill, Safety Zone и заведение Морли, Аль-Хар, Басти, Квартал огров, Театр «Мир», усадьба Чодо и остров Copperhead Bar оставлены в каталоге первой карты: возможный сектор Сент-Луиса для них пока нельзя выбрать убедительно.</p>
@@ -22,6 +31,43 @@
 <script>
 const map=L.map('map',{zoomControl:true,minZoom:11,maxZoom:17}).setView([38.627,-90.225],13);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+map.createPane('anchorsPane');map.getPane('anchorsPane').style.zIndex=440;
+map.createPane('tunfairePane');map.getPane('tunfairePane').style.zIndex=460;
+map.createPane('anchorHitsPane');map.getPane('anchorHitsPane').style.zIndex=470;
+map.createPane('tunfaireLabelsPane');map.getPane('tunfaireLabelsPane').style.zIndex=650;
+const anchors=[
+{name:'Арка Gateway',kind:'Арка',at:[38.6246016,-90.1849751]},
+{name:'Мост Идс',kind:'Исторический мост',at:[38.6295975,-90.1852874]},
+{name:'Старое здание суда',kind:'Историческое здание суда',at:[38.6257274,-90.1893477]},
+{name:'Гражданский суд',kind:'Здание суда',at:[38.6275766,-90.1971923]},
+{name:'Мэрия',kind:'Городское учреждение',at:[38.6268322,-90.1994026]},
+{name:'Старый почтамт',kind:'Историческое госучреждение',at:[38.6291112,-90.1927987]},
+{name:'Федеральный резервный банк',kind:'Государственное учреждение',at:[38.6287652,-90.1880167]},
+{name:'Мемориал солдат',kind:'Городской мемориал',at:[38.6290174,-90.2000503]},
+{name:'Центральная библиотека',kind:'Общественное учреждение',at:[38.6307565,-90.1994582]},
+{name:'Вокзал Union Station',kind:'Исторический вокзал',at:[38.6281219,-90.2080262]},
+{name:'Штаб полиции',kind:'Полиция',at:[38.6321242,-90.2076738]},
+{name:'Центральный участок',kind:'Полиция · Central Patrol',at:[38.6381135,-90.2129193]},
+{name:'Северный участок',kind:'Полиция · North Patrol',at:[38.6816801,-90.2564208]},
+{name:'Южный участок',kind:'Полиция · South Patrol',at:[38.6044794,-90.2823330]},
+{name:'Barnes-Jewish',kind:'Больница',at:[38.6371647,-90.2643699]},
+{name:'Больница SLU',kind:'Больница',at:[38.6242428,-90.2391508]},
+{name:'Бывшая городская больница',kind:'Историческое здание больницы · закрыта',at:[38.6137233,-90.2078126],url:'https://www.stlouis-mo.gov/archives/sldc/brownfields/City-Hospital.cfm'},
+{name:'Bellefontaine',kind:'Историческое кладбище',at:[38.6913607,-90.2300827]},
+{name:'Calvary',kind:'Историческое кладбище',at:[38.7032954,-90.2380659]},
+{name:'Greenwood',kind:'Историческое кладбище',at:[38.6887893,-90.2865390]},
+{name:'Старый собор',kind:'Церковь · Basilica of St. Louis, King of France',at:[38.6240865,-90.1872722]},
+{name:'Кафедральная базилика',kind:'Церковь',at:[38.6425329,-90.2546376]},
+{name:'Christ Church',kind:'Историческая церковь',at:[38.6304966,-90.1982904]},
+{name:'Святилище св. Иосифа',kind:'Историческая церковь',at:[38.6372421,-90.1925996]}
+];
+const anchorLayer=L.layerGroup().addTo(map);
+const anchorHits=L.layerGroup().addTo(map);
+const anchorMarkers=[];
+anchors.forEach(a=>{const icon=L.divIcon({className:'anchor-icon',html:'<span class="anchor-content"><span class="anchor-dot"></span><span class="anchor-pill"></span></span>',iconSize:null,iconAnchor:[5,5]});const marker=L.marker(a.at,{icon,pane:'anchorsPane',title:a.name}).addTo(anchorLayer);anchorMarkers.push(marker);marker.getElement().querySelector('.anchor-pill').textContent=a.name;const popup=document.createElement('div');popup.className='anchor-popup';const title=document.createElement('strong');title.textContent=a.name;const kind=document.createElement('span');kind.textContent=a.kind;const link=document.createElement('a');link.href=a.url||`https://www.openstreetmap.org/?mlat=${a.at[0]}&mlon=${a.at[1]}#map=17/${a.at[0]}/${a.at[1]}`;link.target='_blank';link.rel='noopener noreferrer';link.textContent=a.url?'История места':'Открыть в OpenStreetMap';popup.append(title,kind,link);marker.bindPopup(popup);const hit=L.circleMarker(a.at,{pane:'anchorHitsPane',radius:8,stroke:false,fillColor:'#fff',fillOpacity:0}).addTo(anchorHits);hit.on('click',()=>marker.openPopup());hit.on('mouseover',()=>marker.getElement()?.classList.add('is-hovered'));hit.on('mouseout',()=>marker.getElement()?.classList.remove('is-hovered'))});
+function overlaps(a,b,pad=0){return a.left<b.right+pad&&a.right>b.left-pad&&a.top<b.bottom+pad&&a.bottom>b.top-pad}
+function arrangeAnchorLabels(){const shown=[];const dots=anchorMarkers.map(marker=>marker.getElement()?.querySelector('.anchor-dot').getBoundingClientRect()).filter(Boolean);for(const marker of anchorMarkers){const el=marker.getElement();if(!el)continue;el.classList.remove('is-crowded');const box=el.querySelector('.anchor-pill').getBoundingClientRect();const ownDot=el.querySelector('.anchor-dot').getBoundingClientRect();if(shown.some(other=>overlaps(box,other,4))||dots.some(dot=>dot!==ownDot&&overlaps(box,dot,2)))el.classList.add('is-crowded');else shown.push(box)}}
+map.on('moveend zoomend',()=>requestAnimationFrame(arrangeAnchorLabels));requestAnimationFrame(arrangeAnchorLabels);
 const colors={strong:'#9a513f',medium:'#ba8a4c',weak:'#738a7d'};
 const entries=[
 {id:'river',name:'Река и набережная',grade:'strong',center:[38.626,-90.183],r:1050,brief:'Миссисипи — самый сильный аналог речного фронта Танфера.',basis:'PDF, с. 3; Sweet Silver Blues; Cold Copper Tears.',shape:'line',coords:[[38.668,-90.179],[38.647,-90.179],[38.626,-90.181],[38.610,-90.189],[38.595,-90.199]]},
@@ -41,14 +87,15 @@ const artDialog=document.getElementById('illustration-dialog');const artImage=do
 function openIllustration(e){document.getElementById('illustration-title').textContent=e.name;artImage.src='images/'+e.id+'.webp';artImage.alt='Нуарная иллюстрация: '+e.name;document.getElementById('illustration-description').textContent=e.brief;document.getElementById('illustration-basis').textContent='Основание: '+e.basis;if(!artDialog.open)artDialog.showModal()}
 document.getElementById('illustration-close').onclick=()=>artDialog.close();artDialog.addEventListener('click',event=>{if(event.target===artDialog)artDialog.close()});
 const visibleLabels={landing:"Лэндинг?",garrett:"Дом Гаррета?",hill:"Холм?",western:"Запад за Холмом",dream:"Квартал Сновидений?",brew:"Пивоваренный район?"};
-function makeLayer(e){let color=colors[e.grade],shape;if(e.shape==='line')shape=L.polyline(e.coords,{color,weight:e.id==='river'?10:8,opacity:opacity,dashArray:e.id==='gods'?'9 8':e.id==='river'?null:'7 7'});else shape=L.circle(e.center,{radius:e.r,color,weight:2,opacity:Math.min(.9,opacity+.18),fillColor:color,fillOpacity:opacity*.21,dashArray:e.grade==='weak'?'6 6':null});
-shape.on('click',()=>openIllustration(e));shape.addTo(overlay);layers[e.id]=shape;
-if(visibleLabels[e.id])L.marker(e.center,{icon:L.divIcon({className:'map-label',html:visibleLabels[e.id],iconSize:null,iconAnchor:[0,15]})}).on('click',()=>openIllustration(e)).addTo(overlay);
-if(e.id==='garrett'){L.circleMarker(e.center,{radius:5,color:'#fff',weight:2,fillColor:color,fillOpacity:1}).on('click',()=>openIllustration(e)).addTo(overlay)} }
+function makeLayer(e){let color=colors[e.grade],shape;if(e.shape==='line')shape=L.polyline(e.coords,{pane:'tunfairePane',color,weight:e.id==='river'?10:8,opacity:opacity,dashArray:e.id==='gods'?'9 8':e.id==='river'?null:'7 7'});else shape=L.circle(e.center,{pane:'tunfairePane',radius:e.r,color,weight:2,opacity:Math.min(.9,opacity+.18),fillColor:color,fillOpacity:opacity*.21,dashArray:e.grade==='weak'?'6 6':null});
+shape.on('click',event=>{if(map.hasLayer(anchorLayer)){const point=map.latLngToLayerPoint(event.latlng);const nearby=anchorMarkers.find(marker=>map.latLngToLayerPoint(marker.getLatLng()).distanceTo(point)<9);if(nearby){nearby.openPopup();return}}openIllustration(e)});shape.addTo(overlay);layers[e.id]=shape;
+if(visibleLabels[e.id])L.marker(e.center,{pane:'tunfaireLabelsPane',icon:L.divIcon({className:'map-label',html:visibleLabels[e.id],iconSize:null,iconAnchor:[0,15]})}).on('click',()=>openIllustration(e)).addTo(overlay);
+if(e.id==='garrett'){L.circleMarker(e.center,{pane:'tunfairePane',radius:5,color:'#fff',weight:2,fillColor:color,fillOpacity:1}).on('click',()=>openIllustration(e)).addTo(overlay)} }
 entries.forEach(makeLayer);
 const list=document.getElementById('places');entries.forEach(e=>{const div=document.createElement('div');div.className='item';const b=document.createElement('button');b.type='button';b.textContent=e.name;b.onclick=()=>{map.flyTo(e.center,e.id==='river'?12:14);if(!map.hasLayer(overlay))map.addLayer(overlay);openIllustration(e)};const p=document.createElement('p');p.textContent=e.brief;const g=document.createElement('div');g.className='grade';g.textContent={strong:'Сильный структурный аналог',medium:'Вероятная зона',weak:'Слабая привязка'}[e.grade];div.append(b,g,p);list.append(div)});
 document.getElementById('overlay-toggle').onchange=e=>e.target.checked?map.addLayer(overlay):map.removeLayer(overlay);
+document.getElementById('anchors-toggle').onchange=e=>{if(e.target.checked){map.addLayer(anchorLayer);map.addLayer(anchorHits);requestAnimationFrame(arrangeAnchorLabels)}else{map.removeLayer(anchorLayer);map.removeLayer(anchorHits)}};
 document.getElementById('opacity').oninput=e=>{opacity=+e.target.value/100;for(const d of entries){const s=layers[d.id];if(d.shape==='line')s.setStyle({opacity});else s.setStyle({opacity:Math.min(.9,opacity+.18),fillOpacity:opacity*.21})}};
-document.getElementById('reset').onclick=()=>map.flyTo([38.627,-90.225],13);
+document.getElementById('reset').onclick=()=>map.fitBounds(L.latLngBounds([...anchors.map(a=>a.at),...entries.map(e=>e.center)]),{padding:[30,30],maxZoom:13});
 </script>
 </body></html>
